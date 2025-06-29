@@ -8,13 +8,15 @@ export class Player implements PlayerType {
     effectcards: EffectCardType[];
     color: string;
     countries: CountryType[];
+    socketId: string;
     
-    constructor(name: string) {
+    constructor(name: string, sockerId: string = "") {
         this.name = name;
         this.color = PLAYER_COLORS[Math.floor(Math.random() * PLAYER_COLORS.length)];
         this.dicecards = [];
         this.effectcards = [];
         this.countries = [];
+        this.socketId = sockerId;
     }
     
     isPlayerTurn(): boolean {

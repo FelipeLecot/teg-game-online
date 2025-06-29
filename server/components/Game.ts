@@ -104,10 +104,10 @@ export class Game implements GameType {
   gameConfig: GameConfigType[] = [];
   actions: ActionType[] = []
   
-  constructor(owner: string, players: Player[] = []) {
+  constructor(owner: string, players: PlayerType[] = []) {
     this.owner = owner;
     this.players = players;
-    this.players.push(new Player(owner, ));
+    this.players.push(new Player(owner));
   }
 
   playEffectCard: (playerIndex: number, cardName: string) => void;
@@ -121,11 +121,7 @@ export class Game implements GameType {
     const allCountries: CountryType[] = selectedNames.map((name, idx) => {
       const continent = this.continents[idx % continentCount];
       continent.countries.push(name);
-      return {
-        name,
-        continent: continent.name,
-        neighbors: [],
-      };
+      return new Country()
     });
 
     const adjacency: Record<string, Set<string>> = {};
