@@ -1,6 +1,7 @@
 import { divideCountriesByContinent } from "../../../logic/divideCountriesByContinent"
 import joinCountries from "../../../logic/joinCountries"
 import { playerHasNeighborOf } from "../../../logic/playerHasNeighborOf"
+import { playerOwnsCountry } from "../../../logic/playerOwnsCountry"
 import type { OwnedCountry, Player } from "../../../utils/types"
 import CountryCard from "../../common/country_card"
 import styles from './styles.module.css'
@@ -18,7 +19,13 @@ export default function CountriesList({ list, localPlayerIndex, continents }: { 
         <h4>{title}</h4>
         <ul>
           {array.map(country => (
-            <CountryCard key={country.name} country={country} continentColor={continents[country.continent].color} allowed={playerHasNeighborOf(list[localPlayerIndex], country.name)} />
+            <CountryCard 
+              key={country.name} 
+              country={country} 
+              continentColor={continents[country.continent].color} 
+              owned={playerOwnsCountry(list[localPlayerIndex], country.name)} 
+              allowed={playerHasNeighborOf(list[localPlayerIndex], country.name)}
+            />
           ))}
         </ul>
       </div>

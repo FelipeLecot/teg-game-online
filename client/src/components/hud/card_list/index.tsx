@@ -120,15 +120,17 @@ const CardList: React.FC<Props> = ({ list }) => {
                     box-shadow:
                         0 10px 20px hsla(0, 0%, 0%, 0.4),
                         inset 0 0 0 2px hsla(${hue}, 100%, 80%, 0.75);
-                    transform: translateY(-100px) rotate(0deg) scale(2);
+                    transform: translateY(-50px) rotate(0deg) scale(1.1);
                     transition-duration: 0ms;
                     z-index: 5;
                 }
 
+                .card-in-hand:nth-child(${i + 1}).selected .card-face:after,
                 .card-in-hand:nth-child(${i + 1}):hover .card-face:after {
                     animation: fade 250ms ease-out forwards;
                 }
 
+                .card-in-hand:nth-child(${i + 1}).selected:after,
                 .card-in-hand:nth-child(${i + 1}):hover:after {
                     top: -175px;
                 }

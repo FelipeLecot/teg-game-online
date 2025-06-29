@@ -1,4 +1,6 @@
 .countriesList {
     display: flex;
     gap: 0.5rem;
+    position: fixed;
+    top: 0%;
 }
