@@ -33,16 +33,23 @@ export type ActionType = {
   status?: 'pending' | 'success' | 'failed';
 }
 
-export type Event = { // update states of dice cards, effect cards, etc.
+export type BufferTypes = {
   type: string;
-  playerIndex: number;
-  data?: Partial<{
-    dicecards: any;
-    effectcards: any;
-    countries: any;
-    buff: any;
-    debuff: any;
-  }>;
+  value: number
+}
+
+export type DebufferTypes = {
+  type: string;
+  value: number
+}
+
+export type PlayerStatus = {
+  name: string;
+  dicecards: number | number[][];
+  effectcards: number | EffectCardType[];
+  countries: CountryType[];
+  buff: BufferTypes[];
+  debuff: DebufferTypes[];
 }
 
 export interface GameType {
@@ -56,7 +63,6 @@ export interface GameType {
   continents: ContinentType[];
   
   actions: ActionType[];
-  getDiceCard: () => number[];
   setDefense: (playerIndex: number, diceCard: number[]) => number[]; // card
   attackConclude: () => void;
   getCountryOwner: (country: string) => string;
@@ -89,6 +95,8 @@ export interface PlayerType {
   dicecards: number[][];
   effectcards: EffectCardType[];
   countries: CountryType[];
+  getDiceCard: () => number[];
+  getStatus: () => PlayerStatus[];
   isPlayerTurn: () => boolean;
   hasEffectCard: (card: string) => boolean;
   hasDiceCard: (card: number[]) => boolean;
