@@ -1,19 +1,21 @@
 import express from 'express';
 import http from 'http';
+import { Game } from './components/Game.ts';
 import { parseCookies } from './helpers/getCookies.ts'
 import { Server, Socket } from 'socket.io';
-import { Game, Country } from './types.ts'
+import { GameType, CountryType } from './types.ts'
 import { getPlayerAndGameInfo } from './helpers/getPlayerAndGameInfo.ts';
+import { updatePlayersStatus } from './helpers/updatePlayersStatus.ts';
 
-const gamesArr: Game[] = []
+const gamesArr: GameType[] = []
 const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: {
-    origin: '3000',
-    methods: ['GET', 'POST']
-  }
+	cors: {
+		origin: '3000',
+		methods: ['GET', 'POST']
+	}
 });
 
 io.on('connection', (socket: Socket) => {
@@ -94,9 +96,17 @@ io.on('connection', (socket: Socket) => {
       socket.emit('error', error.message);
     }
   })
+	const currentGame = gamesArr[cookies.gameId];
+	currentGame.addNewPlayer(cookies.playerName, socket.id);
+
+	socket.on('new-game', () => {
+		const game = new Game(cookies.playerName);
+		gamesArr.push(game);
+		return true
+	})
 });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+	console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
