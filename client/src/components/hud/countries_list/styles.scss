@@ -1,0 +1,64 @@
+.card-stack {
+  position: relative;
+  width: 320px;
+  margin: auto;
+}
+
+.card-country {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+//   margin-top: 15px; // leve separación visual entre cartas
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  h2, p {
+    margin: 0;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  h2 {
+    font-size: 1rem;
+    opacity: 1;
+  }
+
+  p {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  // Última carta siempre desplegada
+  &:last-child {
+    height: 150px;
+    z-index: 10;
+    h2, p {
+      opacity: 1;
+    }
+    cursor: default;
+  }
+
+  // Hover en otras cartas
+  &:not(:last-child):hover {
+    height: 150px;
+    z-index: 20;
+
+    h2, p {
+      opacity: 1;
+    }
+
+    // Mueve solo la siguiente carta
+    & + .card-country {
+      margin-top: 5px; // 150 (altura desplegada) - 25 (stack base) para que se empuje justo lo necesario
+    }
+  }
+}

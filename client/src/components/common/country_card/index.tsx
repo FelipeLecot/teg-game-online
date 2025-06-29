@@ -9,7 +9,8 @@ export default function CountryCard ({country, continentColor}: {country: OwnedC
   const { targetCountry } = useGameValues()
     return <div
         key={Math.random()}
-        className={[styles.card, targetCountry === country.name ? styles.selected : ''].join(' ')}
+        className='card-country'
+        // className={[styles.card, targetCountry === country.name ? styles.selected : ''].join(' ')}
         onClick={()=>{setTargetCountry(country.name)}}
         style={{ background: continentColor }}
     >

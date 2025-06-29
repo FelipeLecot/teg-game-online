@@ -3,6 +3,7 @@ import joinCountries from "../../../logic/joinCountries"
 import type { OwnedCountry, Player } from "../../../utils/types"
 import CountryCard from "../../common/country_card"
 import styles from './styles.module.css'
+import './styles.scss'
 
 export default function CountriesList({ list, continents }: { list: Player[], continents: {[key:string]: {name: string, color: string}} }) {
   if (!list || list.length === 0) return null
@@ -12,7 +13,7 @@ export default function CountriesList({ list, continents }: { list: Player[], co
 
   const Column = ({ title, array }: { title: string, array: OwnedCountry[] }) => {
     return (
-      <div key={title}>
+      <div key={title} className="card-stack">
         <h4>{title}</h4>
         <ul>
           {array.map(country => (
