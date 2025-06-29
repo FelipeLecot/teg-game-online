@@ -3,12 +3,13 @@ import http from 'http';
 import { parseCookies } from './helpers/getCookies.ts'
 import { Server, Socket } from 'socket.io';
 import { Game } from './types.ts'
+import { getPlayerAndGameInfo } from './helpers/getPlayerAndGameInfo.ts';
 
-// discard-cards
-// discard-effects-cards
+// attack-country {
+//  set game attack
+// }
 
-const gamesArr:Game[] = []
-
+const gamesArr: Game[] = []
 const app = express();
 const server = http.createServer(app);
 
@@ -21,27 +22,33 @@ const io = new Server(server, {
 
 io.on('connection', (socket: Socket) => {
   console.log(`Cliente conectado: ${socket.id}`);
-  const cookies = parseCookies(socket.handshake.headers.cookie)
-  const game = gamesArr[cookies.gameId];
-  
-  socket.on('draw-card', () => {
-    // Enviar la carta SOLO al jugador que la pidió
-    socket.emit('your-cards', game.methods.drawCard(cookies.playerId));
-  });
+  const cookies = parseCookies(socket.handshake.headers.cookie);
 
-  socket.on('play-card', ({ cardId }) => {
-    const success = game.methods.playCard(socket.id, cardId);
-    if (success) {
-      const card = { id: cardId, name: 'País X' }; // deberías buscar el nombre real de la carta
-      io.emit('card-played', { card, by: socket.id });
+  socket.on('play-effect-card', ({ cardName }) => {
+    try {
+      const { game, playerIndex, player } = getPlayerAndGameInfo(gamesArr, cookies);
+      const hasCard = player.hasEffectCard(cardName);
+      if (!hasCard) {
+        throw new Error(`Player ${player.name} do not has this card`);
+      }
+      if (!player.isPlayerTurn()) {
+        throw new Error(`Is not ${player.name} turn`);
+      }
+      io.emit('effect-card-played', game.playEffectCard(playerIndex, cardName));
+      return true;
+    } catch (error) {
+      console.error(error);
+      socket.emit('error', error.message)
     }
   });
 
   socket.on('end-turn', () => {
-    game.methods.advanceTurn(socket.id);
-
-    const currentPlayer = game.players[game.turn];
-    io.emit('turn-changed', currentPlayer.id);
+    const { game, playerIndex, player } = getPlayerAndGameInfo(gamesArr, cookies);
+    if (!player.isPlayerTurn()) {
+      return socket.emit('error', `Is not ${player.name} turn`)
+    }
+    game.advanceTurn();
+    io.emit('turn-changed', playerIndex);
   });
 });
 
