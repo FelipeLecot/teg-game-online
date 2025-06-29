@@ -1,5 +1,5 @@
-import { Country, Player, EffectCard, Continent } from "../types.ts";
-
+import { CountryType, PlayerType, ActionType, EffectCardType, GameType, ContinentType, EnumGameStates, GameConfigType } from "../types.ts";
+import { Player } from "./Player.ts";
 const FAKE_COUNTRY_NAMES = [
   "Atlantis",
   "Elbonia",
@@ -80,21 +80,45 @@ const FAKE_CONTINENT_NAMES = [
   "Xalandra",
 ];
 
-export class Game {
-  countriesMap: Record<string, Country> = {};
-  continents: Continent[] = FAKE_CONTINENT_NAMES.map((name) => ({
-    name,
-    countries: [],
-    reward: 0,
-  }));
-  players: Player[] = [];
+const CONTINENT_COLOR = [
+  "red",
+  "blue",
+  "green",
+  "yellow",
+  "purple",
+  "orange",
+  "pink",
+  "brown",
+  "cyan",
+  "gray",
+];
+
+export class Game implements GameType {
+  countries: CountryType[] = [];
+  continents: ContinentType[] = []
+  players: PlayerType[] = [];
+  turn = 0;
+  round = 0;
+  state = "waiting" as EnumGameStates;
+  owner: string = "";
+  gameConfig: GameConfigType[] = [];
+  actions: ActionType[] = []
+  
+  constructor(owner: string, players: Player[] = []) {
+    this.owner = owner;
+    this.players = players;
+    this.players.push(new Player(owner, ));
+  }
+
+  playEffectCard: (playerIndex: number, cardName: string) => void;
+  isPlayerTurn: (playerIndex: number) => boolean;
 
   generateCountriesAndAssignToPlayers() {
     const numCountries = this.players.length * 8;
     const selectedNames = FAKE_COUNTRY_NAMES.slice(0, numCountries);
     const continentCount = this.continents.length;
 
-    const allCountries: Country[] = selectedNames.map((name, idx) => {
+    const allCountries: CountryType[] = selectedNames.map((name, idx) => {
       const continent = this.continents[idx % continentCount];
       continent.countries.push(name);
       return {
@@ -154,4 +178,6 @@ export class Game {
       country.neighbors = [...adjacency[country.name]];
     }
   }
+
+  advanceTurn: () => void;
 }

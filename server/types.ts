@@ -26,60 +26,86 @@ export enum EnumEffectTargetCards {
   Countries = 'countries'
 }
 
-export interface Game {
+export type ActionType = {
+  type: string;
+  playerIndex: number;
+  data?: any;
+  status?: 'pending' | 'success' | 'failed';
+}
+
+export type Event = { // update states of dice cards, effect cards, etc.
+  type: string;
+  playerIndex: number;
+  data?: Partial<{
+    dicecards: any;
+    effectcards: any;
+    countries: any;
+    buff: any;
+    debuff: any;
+  }>;
+}
+
+export interface GameType {
   state: EnumGameStates;
-  requiredPlayers: number;
   owner: string;
   turn: number;
   round: number;
-  players: Player[];
-  gameConfig: GameConfig[],
+  players: PlayerType[];
+  gameConfig: GameConfigType[],
+  countries: CountryType[];
+  continents: ContinentType[];
+  
+  actions: ActionType[];
   
   playEffectCard: (playerIndex: number, cardName: string) => void;
   isPlayerTurn: (playerIndex: number) => boolean;
   advanceTurn: () => void;
 }
 
-export interface GameConfig {
+export interface GameConfigType {
   type: string;
   value: string | number | boolean;
 }
 
-export interface Objective {
+export interface ObjectiveType {
   description: string;
   players: number;
-  objetiveConditions: ObjectiveCondition[]
+  objetiveConditions: ObjectiveConditionType[]
 }
 
-export interface ObjectiveCondition {
+export interface ObjectiveConditionType {
   type: EnumObjectiveType;
   amount: number;
   target: string;
 }
 
-export interface Player {
+export interface PlayerType {
   name: string;
   dicecards: number[][];
-  effectcards: EffectCard[];
-  countries: Country[];
+  effectcards: EffectCardType[];
+  countries: CountryType[];
   isPlayerTurn: () => boolean;
   hasEffectCard: (card: string) => boolean;
-  hasDiceCard: (card: string) => boolean;
+  hasDiceCard: (card: number[]) => boolean;
+  color: string;
 }
 
-export interface EffectCard {
+export interface EffectCardType {
+  name: string;
+  description: string;
   type: EnumEffectCards;
   target: EnumEffectTargetCards;
 }
 
-export interface Country {
+export interface CountryType {
   name: string;
   neighbors: string[];
   continent: string;
 }
 
-export interface Continent {
+export interface ContinentType {
   countries: string[];
   reward: number;
   name: string;
+  color: string;
 }
