@@ -5,7 +5,7 @@ export default function joinCountries(players: Player[]): OwnedCountry[] {
 
   for (const player of players) {
     for (const country of player.countries) {
-      result.push({ ...country, owned: player.name })
+      result.push({ ...country, owned: player })
     }
   }
 

@@ -1,26 +1,13 @@
 import { divideCountriesByContinent } from "../../../logic/divideCountriesByContinent"
-import type { Country, Player } from "../../../utils/types"
+import joinCountries from "../../../logic/joinCountries"
+import type { OwnedCountry, Player } from "../../../utils/types"
 import CountryCard from "../../common/country_card"
 import styles from './styles.module.css'
-
-type OwnedCountry = Country & { owned: string }
-
-function joinCountries(players: Player[]): OwnedCountry[] {
-  const result: OwnedCountry[] = []
-
-  for (const player of players) {
-    for (const country of player.countries) {
-      result.push({ ...country, owned: player.name })
-    }
-  }
-
-  return result
-}
 
 export default function CountriesList({ list }: { list: Player[] }) {
   if (!list || list.length === 0) return null
 
-  const joinedList = joinCountries(list)
+  const joinedList: OwnedCountry[] = joinCountries(list)
   const sortedList = divideCountriesByContinent(joinedList)
 
   const Column = ({ title, array }: { title: string, array: OwnedCountry[] }) => {

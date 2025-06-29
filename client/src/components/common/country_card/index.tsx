@@ -1,16 +1,20 @@
 import { useGameActions, useGameValues } from '../../../pages/Game'
-import type { Country } from '../../../utils/types'
+import type { OwnedCountry } from '../../../utils/types'
+import PlayerIcon from '../player_icon'
 import styles from './styles.module.css'
 
 
-export default function CountryCard ({country}: {country: Country}) {
+export default function CountryCard ({country}: {country: OwnedCountry}) {
   const { setTargetCountry } = useGameActions()
   const { targetCountry } = useGameValues()
+  console.log('COUNTRYCARD',country.owned)
     return <div
         key={Math.random()}
         className={[styles.card, targetCountry === country.name ? styles.selected : ''].join(' ')}
         onClick={()=>{setTargetCountry(country.name)}}
+        style={{ background: country.owned?.color }}
     >
+        {country.owned && <PlayerIcon playerData={country.owned} hasTheTurn={false}/>}
         <h4>{country.name}</h4>
         <hr />
         <ul>
