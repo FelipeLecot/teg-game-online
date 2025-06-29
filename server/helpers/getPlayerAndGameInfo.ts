@@ -1,6 +1,6 @@
-import { Game } from "../types";
+import { GameType } from "../types";
 
-export function getPlayerAndGameInfo (gamesArr: Game[], cookies, ) {
+export function getPlayerAndGameInfo (gamesArr: GameType[], cookies, ) {
     const game = gamesArr[cookies.gameId];
     let playerIndex = game.players.findIndex(p => p.name === cookies.playerName);
 
