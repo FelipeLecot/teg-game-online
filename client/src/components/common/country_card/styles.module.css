@@ -2,7 +2,7 @@
   transform: scale(1.05);
 }
 
-.card .select {
+.card.select {
   background-color: #eee;
   transform: scale(1.08);
 }
@@ -15,23 +15,31 @@
   border: 2px solid gray;
   border-radius: 4px;
   margin: 0.5rem;
-  width: 4.5rem;
+  width: 6rem;
   height: 7rem; 
 }
 
+ul {
+  justify-content: center;
+  text-align: left;
+  margin: 0;
+  padding:0%;
+}
 
 li {
   list-style-type: none;
   font-size: 0.8rem;
+  padding-left: 5px;
+  padding-bottom: 5px;
 }
 
 hr {
   width: 75%;
-  margin:
+  justify-content:;
 }
 
 h4 {
-  padding: 0;
+  padding: 10px;
   margin: 0;
   font-size: 1rem;
   justify-content: center;
