@@ -38,7 +38,7 @@ export interface Game {
   setDefense: (playerIndex: number, diceCard: number[]) => number[]; // card
   attackConclude: () => void;
   getCountryOwner: (country: string) => string;
-  setAttack: (playerIndex: number, defensePlayerIndex: number, attackingCountry: string, defensiveCountry: string) => void; // events
+  setAttack: (playerIndex: number, defensePlayerIndex: number, attackingCountry: string, defensiveCountry: string, diceCard: number[]) => void; // events
   playEffectCard: (playerIndex: number, cardName: string) => void; // events
   isPlayerTurn: (playerIndex: number) => boolean;
   advanceTurn: () => number; // turn

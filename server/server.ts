@@ -65,9 +65,9 @@ io.on('connection', (socket: Socket) => {
       const defensePlayer = game.players[defensePlayerIndex]
       if (!countryObj?.isNeighbor(attackingCountry)) throw new Error(`Countries are not neighbor`)
 
-      const events = game.setAttack(playerIndex, defensePlayerIndex, attackingCountry, defensiveCountry);
+      const events = game.setAttack(playerIndex, defensePlayerIndex, attackingCountry, defensiveCountry, diceCard);
 
-      io.emit('atack-setted', events)
+      io.emit('attack-setted', events)
       io.to(defensePlayer.socketId).emit('set-defense', defensiveCountry);
       return true;
     } catch (error) {
@@ -88,7 +88,7 @@ io.on('connection', (socket: Socket) => {
       io.emit(defenseCard.join(','));
 
       const events = game.attackConclude();
-      io.emit('atack-conclude', events)
+      io.emit('attack-conclude', events)
     } catch (error) {
       console.error(error);
       socket.emit('error', error.message);
