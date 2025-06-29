@@ -81,4 +81,5 @@ export interface Country {
 export interface Continent {
   countries: string[];
   reward: number;
+  name: string;
 }
