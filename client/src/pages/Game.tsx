@@ -1,33 +1,12 @@
 import React from "react"
-import type { Player } from "../utils/types"
+import type { Country, Player } from "../utils/types"
 import { io, type Socket } from "socket.io-client"
-import CardList from "../components/hud/cardList"
-import PlayersList from "../components/hud/playersList"
-
-const defaultCards: number[][] = [
-  [3, 3, 1],
-  [3, 3, 2],
-  [4, 3, 2],
-  [5, 3, 2],
-]
-
-const defaultPlayers: Player[] = [
-  {
-    id: 'gnasgmsagkva',
-    name: 'Player',
-    countries: [],
-  },
-  {
-    id: 'asgnaskgmsagkva',
-    name: 'Player 2',
-    countries: [],
-  },
-  {
-    id: 'fagnsava',
-    name: 'Player 3',
-    countries: [],
-  },
-]
+import { defaultCountries } from "../defaults/countries"
+import { defaultPlayers } from "../defaults/players"
+import { defaultCards } from "../defaults/cards"
+import CountriesList from "../components/hud/countries_list"
+import PlayersList from "../components/hud/players_list"
+import CardList from "../components/hud/card_list"
 
 let socket: Socket
 
@@ -37,7 +16,7 @@ type Props = {
 }
 
 export default function Game ({playerName = 'Guest', gameKey = ''}: Props){
-    
+  const [countries, setCountries] = React.useState<Country[]>(defaultCountries)
   const [turn, setTurn] = React.useState<number>(0)
   const [players, setPlayers] = React.useState<Player[]>(defaultPlayers)
   const [cards, setCards] = React.useState<number[][]>(defaultCards)
@@ -53,6 +32,7 @@ export default function Game ({playerName = 'Guest', gameKey = ''}: Props){
         name: playerName,
         countries: []
       }])
+      setCountries(defaultCountries)
     })
 
     // update cards
@@ -67,6 +47,7 @@ export default function Game ({playerName = 'Guest', gameKey = ''}: Props){
 
   return (
     <main>
+      <CountriesList list={countries}/>
       <PlayersList list={players} turn={turn}/>
       <CardList list={cards} />
     </main>

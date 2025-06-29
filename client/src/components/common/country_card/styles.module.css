@@ -1,0 +1,17 @@
+.card:hover {
+  transform: scale(1.05);
+}
+.card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+.card div {
+  font-size: 1.5rem;
+  color: #313131;
+  line-height: 1.3;
+}

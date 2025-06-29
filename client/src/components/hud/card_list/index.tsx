@@ -1,4 +1,5 @@
-import Card from "../../common/card"
+
+import DiceCard from '../../common/dice_card'
 import styles from './styles.module.css'
 
 type Props = {
@@ -9,7 +10,7 @@ export default function CardList(props: Props) {
     if(!props.list || props.list.length === 0) return 
     return <ul className={styles.cardList}>
         {props.list.map(values => {
-            return <Card key={Math.random()} values={values} />
+            return <DiceCard key={Math.random()} values={values} />
         })}
     </ul>
 }
