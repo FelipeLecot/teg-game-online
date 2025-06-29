@@ -11,7 +11,7 @@ export default function Menu ({connectToGame}:Props) {
         connectToGame(playerName_input.value ?? 'Guest', gameKey_input)
     }
 
-    return <main>
+    return <main className="main-menu">
         <input id='playername_input' placeholder="player name..."/>
         <input id='gamekey_input' placeholder="game key..."/>
 
