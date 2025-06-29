@@ -1,0 +1,22 @@
+.playerIcon_container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: gray;
+    border: 1px solid black;
+}
+.icon.hasTurn {
+    box-shadow: 0 0 10px rgb(255, 1, 1);
+}
+
+.name {
+    margin: 0;
+    color: black;
+}
