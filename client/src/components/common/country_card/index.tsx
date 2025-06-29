@@ -7,7 +7,6 @@ import styles from './styles.module.css'
 export default function CountryCard ({country}: {country: OwnedCountry}) {
   const { setTargetCountry } = useGameActions()
   const { targetCountry } = useGameValues()
-  console.log('COUNTRYCARD',country.owned)
     return <div
         key={Math.random()}
         className={[styles.card, targetCountry === country.name ? styles.selected : ''].join(' ')}

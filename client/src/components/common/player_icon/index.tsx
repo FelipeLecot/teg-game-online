@@ -6,8 +6,6 @@ type Props = {
 }
 
 export default function PlayerIcon(props: Props) {
-
-    console.log('PLAYERICON',props.playerData)
     return <div
         className={styles.playerIcon_container}
         title={props.playerData.name}
