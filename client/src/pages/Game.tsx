@@ -12,6 +12,7 @@ import type { selectedCardType } from "../utils/clientTypes"
 import AttackButton from "../components/common/attack_button"
 import { playerOwnsCountry } from "../logic/playerOwnsCountry"
 import { playerHasNeighborOf } from "../logic/playerHasNeighborOf"
+import { getNeighboringCountryOfPlayer } from "../logic/getNeighboringCountryOfPlayer"
 
 let socket: Socket
 
@@ -98,7 +99,10 @@ export default function Game({ playerName = 'Guest', gameKey = '' }: Props) {
   }), [targetCountry, turn, selectedCard])
 
   const attack = ()=>{
-    socket.emit("set-attack", '', targetCountry, selectedCard)
+    if(!targetCountry) return 
+    const originCountry = getNeighboringCountryOfPlayer(players[localPlayerIndex], targetCountry)
+    if(!originCountry) return 
+    socket.emit("set-attack", originCountry, targetCountry, selectedCard)
   }
 
   return (

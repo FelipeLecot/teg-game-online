@@ -116,6 +116,7 @@ const CardList: React.FC<Props> = ({ list }) => {
                     text-shadow: -0.025em 0.025em 0 hsla(${hue}, 100%, 75%, 1);
                 }
 
+                .card-in-hand:nth-child(${i + 1}).selected .card-face,
                 .card-in-hand:nth-child(${i + 1}):hover .card-face {
                     box-shadow:
                         0 10px 20px hsla(0, 0%, 0%, 0.4),
