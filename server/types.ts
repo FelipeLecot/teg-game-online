@@ -34,10 +34,14 @@ export interface Game {
   round: number;
   players: Player[];
   gameConfig: GameConfig[],
-  
-  playEffectCard: (playerIndex: number, cardName: string) => void;
+  getDiceCard: () => number[];
+  setDefense: (playerIndex: number, diceCard: number[]) => number[]; // card
+  attackConclude: () => void;
+  getCountryOwner: (country: string) => string;
+  setAttack: (playerIndex: number, defensePlayerIndex: number, attackingCountry: string, defensiveCountry: string) => void; // events
+  playEffectCard: (playerIndex: number, cardName: string) => void; // events
   isPlayerTurn: (playerIndex: number) => boolean;
-  advanceTurn: () => void;
+  advanceTurn: () => number; // turn
 }
 
 export interface GameConfig {
@@ -59,6 +63,7 @@ export interface ObjectiveCondition {
 
 export interface Player {
   name: string;
+  socketId: string;
   dicecards: number[][];
   effectcards: EffectCard[];
   countries: Country[];
@@ -76,6 +81,7 @@ export interface Country {
   name: string;
   neighbors: string[];
   continent: string;
+  isNeighbor: (country: string) => boolean;
 }
 
 export interface Continent {
