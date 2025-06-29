@@ -52,8 +52,48 @@ io.on('connection', (socket: Socket) => {
     }
   });
 
+  socket.on('set-attack', (attackingCountry: string, defensiveCountry: string, diceCard: number[]) => {
+    try {
+      const { game, playerIndex, player } = getPlayerAndGameInfo(gamesArr, cookies);
+      if (!player.isPlayerTurn()) throw new Error(`Is not ${player.name} turn`);
+      let countryObj: Country | undefined;
+      const defensePlayerIndex = game.players.findIndex(player => {
+        countryObj = player.countries.find((country) => country.name == defensiveCountry);
+        return countryObj !== undefined;
+      });
+
+      const defensePlayer = game.players[defensePlayerIndex]
+      if (!countryObj?.isNeighbor(attackingCountry)) throw new Error(`Countries are not neighbor`)
+
+      const events = game.setAttack(playerIndex, defensePlayerIndex, attackingCountry, defensiveCountry);
+
+      io.emit('atack-setted', events)
+      io.to(defensePlayer.socketId).emit('set-defense', defensiveCountry);
+      return true;
+    } catch (error) {
+      console.error(error);
+      socket.emit('error', error.message);
     }
   });
+
+  socket.on('defense-setted', (isHandCard: boolean, diceCard: number[] | undefined) => {
+    try {
+      const { game, playerIndex, player } = getPlayerAndGameInfo(gamesArr, cookies);
+      if (!isHandCard && diceCard) throw new Error("Can't draw a card when a card is played");
+      if (isHandCard && !diceCard) throw new Error("No card selected");
+      if (!isHandCard) diceCard = game.getDiceCard();
+      if (!diceCard) throw new Error("Error drawing a dice card");
+
+      const defenseCard = game.setDefense(playerIndex, diceCard);
+      io.emit(defenseCard.join(','));
+
+      const events = game.attackConclude();
+      io.emit('atack-conclude', events)
+    } catch (error) {
+      console.error(error);
+      socket.emit('error', error.message);
+    }
+  })
 });
 
 const PORT = process.env.PORT || 3000;
