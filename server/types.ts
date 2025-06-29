@@ -1,7 +1,7 @@
 export enum EnumGameStates {
   Waiting = 'waiting',
   Started = 'started',
-  Attacking = 'attacking'
+  Ended = 'ended'
 }
 
 export enum EnumObjectiveType {
@@ -63,6 +63,7 @@ export interface GameType {
   continents: ContinentType[];
   
   actions: ActionType[];
+  getDiceCard: () => number[][];
   setDefense: (playerIndex: number, diceCard: number[]) => number[]; // card
   attackConclude: () => void;
   getCountryOwner: (country: string) => string;
@@ -100,6 +101,7 @@ export interface PlayerType {
   isPlayerTurn: () => boolean;
   hasEffectCard: (card: string) => boolean;
   hasDiceCard: (card: number[]) => boolean;
+  addDiceCards: (cards: number[][]) => void;
   color: string;
 }
 
