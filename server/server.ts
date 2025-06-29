@@ -21,13 +21,22 @@ const io = new Server(server, {
 io.on('connection', (socket: Socket) => {
 	console.log(`Cliente conectado: ${socket.id}`);
 	const cookies = parseCookies(socket.handshake.headers.cookie);
-	const currentGame = gamesArr[cookies.gameId];
-	currentGame.addNewPlayer(cookies.playerName, socket.id);
 
 	socket.on('new-game', () => {
 		try {
 			const game = new Game(cookies.playerName);
 			gamesArr.push(game);
+			return true
+		} catch (error) {
+			console.error(error);
+			socket.emit('error', error.message);
+		}
+	})
+
+	socket.on('join-game', () => {
+		try {
+			const currentGame = gamesArr[cookies.gameId];
+			currentGame.addNewPlayer(cookies.playerName, socket.id);
 			return true
 		} catch (error) {
 			console.error(error);
