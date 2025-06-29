@@ -20,10 +20,10 @@ const io = new Server(server, {
 
 io.on('connection', (socket: Socket) => {
 	console.log(`Cliente conectado: ${socket.id}`);
-	const cookies = parseCookies(socket.handshake.headers.cookie);
 
-	socket.on('new-game', () => {
+	socket.on('create-game', () => {
 		try {
+			const cookies = parseCookies(socket.handshake.headers.cookie);
 			const game = new Game(cookies.playerName);
 			gamesArr.push(game);
 			return true
@@ -35,8 +35,9 @@ io.on('connection', (socket: Socket) => {
 
 	socket.on('join-game', () => {
 		try {
-			const currentGame = gamesArr[cookies.gameId];
-			currentGame.addNewPlayer(cookies.playerName, socket.id);
+			const cookies = parseCookies(socket.handshake.headers.cookie);
+			const game = gamesArr[cookies.gameId];
+			game.addNewPlayer(cookies.playerName, socket.id);
 			return true
 		} catch (error) {
 			console.error(error);
@@ -46,6 +47,7 @@ io.on('connection', (socket: Socket) => {
 
 	socket.on('play-effect-card', (cardName: string) => {
 		try {
+			const cookies = parseCookies(socket.handshake.headers.cookie);
 			const { game, playerIndex, player } = getPlayerAndGameInfo(gamesArr, cookies);
 			const hasCard = player.hasEffectCard(cardName);
 			if (!hasCard) {
@@ -64,6 +66,7 @@ io.on('connection', (socket: Socket) => {
 
 	socket.on('end-turn', () => {
 		try {
+			const cookies = parseCookies(socket.handshake.headers.cookie);
 			const { game, playerIndex, player } = getPlayerAndGameInfo(gamesArr, cookies);
 			if (!player.isPlayerTurn()) throw new Error(`Is not ${player.name} turn`);
 
@@ -78,6 +81,7 @@ io.on('connection', (socket: Socket) => {
 
 	socket.on('set-attack', (attackingCountry: string, defensiveCountry: string, diceCard: number[]) => {
 		try {
+			const cookies = parseCookies(socket.handshake.headers.cookie);
 			const { game, playerIndex, player } = getPlayerAndGameInfo(gamesArr, cookies);
 			if (!player.isPlayerTurn()) throw new Error(`Is not ${player.name} turn`);
 			let countryObj: CountryType | undefined;
@@ -102,6 +106,7 @@ io.on('connection', (socket: Socket) => {
 
 	socket.on('defense-setted', (isHandCard: boolean, diceCard: number[] | undefined) => {
 		try {
+			const cookies = parseCookies(socket.handshake.headers.cookie);
 			const { game, playerIndex, player } = getPlayerAndGameInfo(gamesArr, cookies);
 			if (!isHandCard && diceCard) throw new Error("Can't draw a card when a deck card is played");
 			if (isHandCard && !diceCard) throw new Error("No card selected");
@@ -118,8 +123,6 @@ io.on('connection', (socket: Socket) => {
 			socket.emit('error', error.message);
 		}
 	})
-
-	socket.on
 });
 
 const PORT = process.env.PORT || 3000;
