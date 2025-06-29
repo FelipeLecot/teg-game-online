@@ -5,15 +5,15 @@ type Props = {
 export default function Menu ({connectToGame}:Props) {
     const connect = ()=>{
         const playerName_input = document.getElementById('playername_input') as HTMLInputElement
-        const serverIp_input = document.getElementById('serverip_input') as HTMLInputElement
+        const gameKey_input = document.getElementById('gamekey_input') as HTMLInputElement
 
-        if(!playerName_input || !serverIp_input || !serverIp_input.value) return 
-        connectToGame(playerName_input.value ?? 'Guest', serverIp_input)
+        if(!playerName_input || !gameKey_input || !gameKey_input.value) return 
+        connectToGame(playerName_input.value ?? 'Guest', gameKey_input)
     }
 
     return <main>
         <input id='playername_input' placeholder="player name..."/>
-        <input id='serverip_input' placeholder="server ip..."/>
+        <input id='gamekey_input' placeholder="game key..."/>
 
         <button onClick={connect}>Connect</button>
     </main>

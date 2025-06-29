@@ -6,17 +6,17 @@ import Game from './pages/Game'
 
 function App() {
   const [playerName, setPlayerName] = React.useState('')
-  const [serverIp, setServerIp] = React.useState('')
+  const [gameKey, setGameKey] = React.useState('')
   const [page, setPage] = React.useState('menu')
-  const connectToGame = (playerName: string, serverIp: string)=>{
+  const connectToGame = (playerName: string, gameKey: string)=>{
     setPlayerName(playerName)
-    setServerIp(serverIp)
+    setGameKey(gameKey)
     setPage('game')
   }
 
   const pages: {[key:string]: any} = {
     'menu': <Menu connectToGame={connectToGame}/>,
-    'game': <Game serverIp={serverIp} playerName={playerName}/>
+    'game': <Game gameKey={gameKey} playerName={playerName}/>
   }
   return pages[page]
 }

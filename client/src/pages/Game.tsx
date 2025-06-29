@@ -33,21 +33,21 @@ let socket: Socket
 
 type Props = {
     playerName: string;
-    serverIp: string;
+    gameKey: string;
 }
 
-export default function Game ({playerName = 'Guest', serverIp = ''}: Props){
+export default function Game ({playerName = 'Guest', gameKey = ''}: Props){
     
   const [turn, setTurn] = React.useState<number>(0)
   const [players, setPlayers] = React.useState<Player[]>(defaultPlayers)
   const [cards, setCards] = React.useState<number[][]>(defaultCards)
 
   React.useEffect(() => {
-    // Connect to the socket server
-    socket = io(serverIp !== '' ? serverIp : "http://localhost:3000")
+    // Connect to the socket game
+    socket = io(gameKey !== '' ? gameKey : "http://localhost:3000")
 
     socket.on("connect", () => {
-      console.log("Connected to socket server:", socket.id)
+      console.log("Connected to socket game:", socket.id)
       setPlayers([...players, {
         id: socket.id ?? '',
         name: playerName,
