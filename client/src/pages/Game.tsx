@@ -44,10 +44,11 @@ export const useGameValues = () => {
 
 // --- COMPONENTE GAME ---
 export default function Game({ playerName = 'Guest', gameKey = '' }: Props) {
-  const [countries, setCountries] = React.useState<Country[]>(defaultCountries)
-  const [turn, setTurn] = React.useState<number>(0)
   const [players, setPlayers] = React.useState<Player[]>(defaultPlayers)
+
+  const [turn, setTurn] = React.useState<number>(0)
   const [targetCountry, setTargetCountry] = React.useState<string | undefined>(undefined)
+  
   const [cards, setCards] = React.useState<number[][]>(defaultCards)
 
   React.useEffect(() => {
@@ -58,9 +59,9 @@ export default function Game({ playerName = 'Guest', gameKey = '' }: Props) {
       setPlayers(prev => [...prev, {
         id: socket.id ?? '',
         name: playerName,
-        countries: []
+        countries: [],
+        color: 'yellow'
       }])
-      setCountries(defaultCountries)
     })
 
     socket.on("update_cards", (newCards: number[][]) => {
@@ -85,7 +86,7 @@ export default function Game({ playerName = 'Guest', gameKey = '' }: Props) {
     <GameActionsContext.Provider value={gameActions}>
       <GameValuesContext.Provider value={gameValues}>
         <main>
-          <CountriesList list={countries} />
+          <CountriesList list={players} />
           <PlayersList list={players} />
           <CardList list={cards} />
         </main>
