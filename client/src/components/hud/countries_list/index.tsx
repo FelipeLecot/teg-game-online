@@ -4,7 +4,7 @@ import type { OwnedCountry, Player } from "../../../utils/types"
 import CountryCard from "../../common/country_card"
 import styles from './styles.module.css'
 
-export default function CountriesList({ list }: { list: Player[] }) {
+export default function CountriesList({ list, continents }: { list: Player[], continents: {[key:string]: {name: string, color: string}} }) {
   if (!list || list.length === 0) return null
 
   const joinedList: OwnedCountry[] = joinCountries(list)
@@ -16,7 +16,7 @@ export default function CountriesList({ list }: { list: Player[] }) {
         <h4>{title}</h4>
         <ul>
           {array.map(country => (
-            <CountryCard key={country.name} country={country} />
+            <CountryCard key={country.name} country={country} continentColor={continents[country.continent].color} />
           ))}
         </ul>
       </div>

@@ -4,14 +4,14 @@ import PlayerIcon from '../player_icon'
 import styles from './styles.module.css'
 
 
-export default function CountryCard ({country}: {country: OwnedCountry}) {
+export default function CountryCard ({country, continentColor}: {country: OwnedCountry, continentColor: string}) {
   const { setTargetCountry } = useGameActions()
   const { targetCountry } = useGameValues()
     return <div
         key={Math.random()}
         className={[styles.card, targetCountry === country.name ? styles.selected : ''].join(' ')}
         onClick={()=>{setTargetCountry(country.name)}}
-        style={{ background: country.owned?.color }}
+        style={{ background: continentColor }}
     >
         {country.owned && <PlayerIcon playerData={country.owned} hasTheTurn={false}/>}
         <h4>{country.name}</h4>

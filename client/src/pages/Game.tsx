@@ -1,12 +1,13 @@
 import React from "react"
-import type { Country, Player } from "../utils/types"
+import type { Player } from "../utils/types"
 import { io, type Socket } from "socket.io-client"
-import { defaultCountries } from "../defaults/countries"
 import { defaultPlayers } from "../defaults/players"
 import { defaultCards } from "../defaults/cards"
 import CountriesList from "../components/hud/countries_list"
 import PlayersList from "../components/hud/players_list"
 import CardList from "../components/hud/card_list"
+import { defaultCountries } from "../defaults/countries"
+import generateContinentsWithCountries from "../defaults/logic/generateContinents"
 
 let socket: Socket
 
@@ -15,9 +16,13 @@ type Props = {
   gameKey: string;
 }
 
-// --- CONTEXTO DE ACCIONES ---
+type selectedCardType = {
+  type: 'dice' | 'effect',
+  index: number
+}
 type GameActionsContextType = {
   setTargetCountry: (countryName: string | undefined) => void;
+  setSelectedCard: (selectedCard: selectedCardType) => void;
 }
 
 const GameActionsContext = React.createContext<GameActionsContextType | null>(null)
@@ -28,10 +33,10 @@ export const useGameActions = () => {
   return context
 }
 
-// --- CONTEXTO DE VALORES ---
 type GameValuesContextType = {
   targetCountry: string | undefined;
   turn: number;
+  selectedCard: selectedCardType | undefined;
 }
 
 const GameValuesContext = React.createContext<GameValuesContextType | null>(null)
@@ -42,12 +47,15 @@ export const useGameValues = () => {
   return context
 }
 
-// --- COMPONENTE GAME ---
+let continents = generateContinentsWithCountries(defaultCountries)
+
+
 export default function Game({ playerName = 'Guest', gameKey = '' }: Props) {
   const [players, setPlayers] = React.useState<Player[]>(defaultPlayers)
 
   const [turn, setTurn] = React.useState<number>(0)
   const [targetCountry, setTargetCountry] = React.useState<string | undefined>(undefined)
+  const [selectedCard, setSelectedCard] = React.useState<selectedCardType | undefined>(undefined)
   
   const [cards, setCards] = React.useState<number[][]>(defaultCards)
 
@@ -75,18 +83,20 @@ export default function Game({ playerName = 'Guest', gameKey = '' }: Props) {
 
   const gameActions = React.useMemo(() => ({
     setTargetCountry,
+    setSelectedCard,
   }), [])
 
   const gameValues = React.useMemo(() => ({
     targetCountry,
     turn,
-  }), [targetCountry, turn])
+    selectedCard,
+  }), [targetCountry, turn, selectedCard])
 
   return (
     <GameActionsContext.Provider value={gameActions}>
       <GameValuesContext.Provider value={gameValues}>
         <main>
-          <CountriesList list={players} />
+          <CountriesList list={players} continents={continents} />
           <PlayersList list={players} />
           <CardList list={cards} />
         </main>
