@@ -1,7 +1,7 @@
 export enum EnumGameStates {
   Waiting = 'waiting',
   Started = 'started',
-  Attacking = 'attacking'
+  Ended = 'ended'
 }
 
 export enum EnumObjectiveType {
@@ -26,45 +26,46 @@ export enum EnumEffectTargetCards {
   Countries = 'countries'
 }
 
+export type ID = string;
+
 export interface Game {
+  id: ID;
   state: EnumGameStates;
   requiredPlayers: number;
-  owner: string;
+  owner: ID;
   turn: number;
   round: number;
   players: Player[];
-  gameConfig: GameConfig[],
-  
-  playEffectCard: (playerIndex: number, cardName: string) => void;
-  isPlayerTurn: (playerIndex: number) => boolean;
-  advanceTurn: () => void;
 }
 
 export interface GameConfig {
+  id: ID;
+  gameID: ID;
   type: string;
   value: string | number | boolean;
 }
 
 export interface Objective {
+  id: ID;
   description: string;
   players: number;
-  objetiveConditions: ObjectiveCondition[]
+  playerId: ID;
+  gameId: ID;
 }
 
 export interface ObjectiveCondition {
+  id: ID;
+  objectiveId: ID;
+  conditionId: ID;
   type: EnumObjectiveType;
   amount: number;
   target: string;
 }
 
 export interface Player {
+  id: ID;
   name: string;
-  dicecards: number[][];
-  effectcards: EffectCard[];
   countries: Country[];
-  isPlayerTurn: () => boolean;
-  hasEffectCard: (card: string) => boolean;
-  hasDiceCard: (card: string) => boolean;
 }
 
 export interface EffectCard {
@@ -81,5 +82,4 @@ export interface Country {
 export interface Continent {
   countries: string[];
   reward: number;
-  name: string;
 }
