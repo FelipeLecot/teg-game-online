@@ -1,46 +1,51 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import http from 'http';
+import { parseCookies } from './helpers/getCookies.ts'
 import { Server, Socket } from 'socket.io';
-import dotenv from 'dotenv';
-dotenv.config();
+import { Game } from './types.ts'
 
-// Inicializamos Express y HTTP Server
+// discard-cards
+// discard-effects-cards
+
+const gamesArr:Game[] = []
+
 const app = express();
 const server = http.createServer(app);
 
-// Inicializamos Socket.IO con CORS
 const io = new Server(server, {
   cors: {
-    origin: '*', // En producción: reemplazar con tu dominio
+    origin: '3000',
     methods: ['GET', 'POST']
   }
 });
 
-// Ruta básica
-app.get('/', (req: Request, res: Response) => {
-  res.send('Socket.IO server is running.');
-});
-
-// Manejador de conexión Socket.IO
 io.on('connection', (socket: Socket) => {
-  console.log(`User connected: ${socket.id}`);
-
-  // Escuchar eventos 'message'
-  socket.on('message', (data: string) => {
-    console.log(`Message received: ${data}`);
-
-    // Reenviar el mensaje a todos los clientes conectados
-    io.emit('message', data);
+  console.log(`Cliente conectado: ${socket.id}`);
+  const cookies = parseCookies(socket.handshake.headers.cookie)
+  const game = gamesArr[cookies.gameId];
+  
+  socket.on('draw-card', () => {
+    // Enviar la carta SOLO al jugador que la pidió
+    socket.emit('your-cards', game.methods.drawCard(cookies.playerId));
   });
 
-  // Manejador de desconexión
-  socket.on('disconnect', () => {
-    console.log(`User disconnected: ${socket.id}`);
+  socket.on('play-card', ({ cardId }) => {
+    const success = game.methods.playCard(socket.id, cardId);
+    if (success) {
+      const card = { id: cardId, name: 'País X' }; // deberías buscar el nombre real de la carta
+      io.emit('card-played', { card, by: socket.id });
+    }
+  });
+
+  socket.on('end-turn', () => {
+    game.methods.advanceTurn(socket.id);
+
+    const currentPlayer = game.players[game.turn];
+    io.emit('turn-changed', currentPlayer.id);
   });
 });
 
-// Puerto de escucha
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

@@ -36,6 +36,11 @@ export interface Game {
   turn: number;
   round: number;
   players: Player[];
+  isPlayerTurn: (playerId: ID) => boolean,
+  hasEffectCard: (playerId: ID, card: string) => boolean,
+  playEffectCard: (playerId: ID) => void,
+  hasDiceCard: (playerId: ID, card: string) => boolean,
+  playDiceCard: (playerId: ID) => void,
 }
 
 export interface GameConfig {
