@@ -56,10 +56,14 @@ export interface GameType {
   continents: ContinentType[];
   
   actions: ActionType[];
-  
-  playEffectCard: (playerIndex: number, cardName: string) => void;
+  getDiceCard: () => number[];
+  setDefense: (playerIndex: number, diceCard: number[]) => number[]; // card
+  attackConclude: () => void;
+  getCountryOwner: (country: string) => string;
+  setAttack: (playerIndex: number, defensePlayerIndex: number, attackingCountry: string, defensiveCountry: string) => void; // events
+  playEffectCard: (playerIndex: number, cardName: string) => void; // events
   isPlayerTurn: (playerIndex: number) => boolean;
-  advanceTurn: () => void;
+  advanceTurn: () => number; // turn
 }
 
 export interface GameConfigType {
@@ -81,6 +85,7 @@ export interface ObjectiveConditionType {
 
 export interface PlayerType {
   name: string;
+  socketId: string;
   dicecards: number[][];
   effectcards: EffectCardType[];
   countries: CountryType[];
@@ -101,6 +106,7 @@ export interface CountryType {
   name: string;
   neighbors: string[];
   continent: string;
+  isNeighbor: (country: string) => boolean;
 }
 
 export interface ContinentType {
