@@ -18,6 +18,10 @@ export class Player implements PlayerType {
         this.countries = [];
         this.socketId = sockerId;
     }
+
+    addDiceCards = (cards: number[][]) => {
+        this.dicecards = [...this.dicecards, ...cards]
+    };
     
     isPlayerTurn(): boolean {
         return false;
