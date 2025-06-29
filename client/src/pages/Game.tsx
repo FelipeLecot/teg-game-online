@@ -8,6 +8,10 @@ import PlayersList from "../components/hud/players_list"
 import CardList from "../components/hud/card_list"
 import { defaultCountries } from "../defaults/countries"
 import generateContinentsWithCountries from "../defaults/logic/generateContinents"
+import type { selectedCardType } from "../utils/clientTypes"
+import AttackButton from "../components/common/attack_button"
+import { playerOwnsCountry } from "../logic/playerOwnsCountry"
+import { playerHasNeighborOf } from "../logic/playerHasNeighborOf"
 
 let socket: Socket
 
@@ -16,10 +20,6 @@ type Props = {
   gameKey: string;
 }
 
-type selectedCardType = {
-  type: 'dice' | 'effect',
-  index: number
-}
 type GameActionsContextType = {
   setTargetCountry: (countryName: string | undefined) => void;
   setSelectedCard: (selectedCard: selectedCardType) => void;
@@ -48,6 +48,7 @@ export const useGameValues = () => {
 }
 
 let continents = generateContinentsWithCountries(defaultCountries)
+let localPlayerIndex = 0
 
 
 export default function Game({ playerName = 'Guest', gameKey = '' }: Props) {
@@ -79,10 +80,14 @@ export default function Game({ playerName = 'Guest', gameKey = '' }: Props) {
     // return () => socket.disconnect()
   }, [])
 
-  console.log(targetCountry)
+  const setTargetCountryHandler = (newValue: string | undefined)=> {
+    if(newValue !== undefined && (playerOwnsCountry(players[localPlayerIndex], newValue) || !playerHasNeighborOf(players[localPlayerIndex], newValue))) return
+
+    setTargetCountry(newValue)
+  }
 
   const gameActions = React.useMemo(() => ({
-    setTargetCountry,
+    setTargetCountry: setTargetCountryHandler,
     setSelectedCard,
   }), [])
 
@@ -92,13 +97,19 @@ export default function Game({ playerName = 'Guest', gameKey = '' }: Props) {
     selectedCard,
   }), [targetCountry, turn, selectedCard])
 
+  const attack = ()=>{
+    socket.emit("set-attack", '', targetCountry, selectedCard)
+  }
+
   return (
     <GameActionsContext.Provider value={gameActions}>
       <GameValuesContext.Provider value={gameValues}>
         <main>
-          <CountriesList list={players} continents={continents} />
+          <CountriesList list={players} continents={continents} localPlayerIndex={localPlayerIndex} />
           <PlayersList list={players} />
           <CardList list={cards} />
+
+          <AttackButton selectedCard={selectedCard} targetCountry={targetCountry} attack={attack}/>
         </main>
       </GameValuesContext.Provider>
     </GameActionsContext.Provider>

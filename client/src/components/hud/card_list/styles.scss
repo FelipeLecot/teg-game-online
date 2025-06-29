@@ -67,7 +67,7 @@ body {
   padding: 15px 0 0 15px;
 }
 
-$total: 10;
+$total: 4;
 @for $i from 0 through ($total - 1) {
   $hue: ($i / $total) * -360;
   $rotationRange: 50;

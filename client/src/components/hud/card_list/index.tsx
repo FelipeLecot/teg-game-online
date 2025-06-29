@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGameActions, useGameValues } from '../../../pages/Game';
 
 type Props = {
     list: number[][];
@@ -137,12 +138,16 @@ const CardList: React.FC<Props> = ({ list }) => {
         return css;
     };
 
+    const { setSelectedCard } = useGameActions();
+    const { selectedCard } = useGameValues();
+    const cardIsSelected = selectedCard && selectedCard.type === 'dice';
+
     return (
         <>
             <style>{generateStyles()}</style>
             <ul className="card-dice-list">
                 {list.map((values, index) => (
-                    <li key={index} className="card-in-hand">
+                    <li key={index} className={`card-in-hand ${cardIsSelected && selectedCard.index === index ? 'selected' : ''}`} onClick={() => setSelectedCard({ index, type: 'dice' })}>
                         <div className="card-face">
                             <div className="card-label">{values.join(', ')}</div>
                         </div>
