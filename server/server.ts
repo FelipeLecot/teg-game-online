@@ -25,9 +25,14 @@ io.on('connection', (socket: Socket) => {
 	currentGame.addNewPlayer(cookies.playerName, socket.id);
 
 	socket.on('new-game', () => {
-		const game = new Game(cookies.playerName);
-		gamesArr.push(game);
-		return true
+		try {
+			const game = new Game(cookies.playerName);
+			gamesArr.push(game);
+			return true
+		} catch (error) {
+			console.error(error);
+			socket.emit('error', error.message);
+		}
 	})
 
 	socket.on('play-effect-card', (cardName: string) => {
