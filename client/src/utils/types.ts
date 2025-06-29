@@ -66,6 +66,7 @@ export interface Player {
   id: ID;
   name: string;
   countries: Country[];
+  color: string
 }
 
 export interface EffectCard {
@@ -78,6 +79,7 @@ export interface Country {
   neighbors: string[];
   continent: string;
 }
+export type OwnedCountry = Country & { owned?: Player }
 
 export interface Continent {
   countries: string[];

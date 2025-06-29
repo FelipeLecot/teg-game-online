@@ -1,0 +1,28 @@
+ul {
+  justify-content: center;
+  text-align: left;
+  margin: 0;
+  padding:0%;
+}
+
+li {
+  list-style-type: none;
+  font-size: 0.8rem;
+  padding-left: 5px;
+  padding-bottom: 5px;
+}
+
+hr {
+  width: 75%;
+  justify-content: center;
+  color: currentColor;
+  border: 1px solid;
+}
+
+h4 {
+  padding: 0px;
+  margin: 0;
+  font-size: 1rem;
+  justify-content: center;
+  text-align: center;
+}

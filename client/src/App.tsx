@@ -7,7 +7,7 @@ import Game from './pages/Game'
 function App() {
   const [playerName, setPlayerName] = React.useState('')
   const [gameKey, setGameKey] = React.useState('')
-  const [page, setPage] = React.useState('menu')
+  const [page, setPage] = React.useState('game')
   const connectToGame = (playerName: string, gameKey: string)=>{
     setPlayerName(playerName)
     setGameKey(gameKey)
