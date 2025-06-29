@@ -1,10 +1,11 @@
 import { divideCountriesByContinent } from "../../../logic/divideCountriesByContinent"
 import joinCountries from "../../../logic/joinCountries"
+import { playerHasNeighborOf } from "../../../logic/playerHasNeighborOf"
 import type { OwnedCountry, Player } from "../../../utils/types"
 import CountryCard from "../../common/country_card"
 import styles from './styles.module.css'
 
-export default function CountriesList({ list, continents }: { list: Player[], continents: {[key:string]: {name: string, color: string}} }) {
+export default function CountriesList({ list, localPlayerIndex, continents }: { list: Player[], localPlayerIndex: number, continents: {[key:string]: {name: string, color: string}} }) {
   if (!list || list.length === 0) return null
 
   const joinedList: OwnedCountry[] = joinCountries(list)
@@ -16,7 +17,7 @@ export default function CountriesList({ list, continents }: { list: Player[], co
         <h4>{title}</h4>
         <ul>
           {array.map(country => (
-            <CountryCard key={country.name} country={country} continentColor={continents[country.continent].color} />
+            <CountryCard key={country.name} country={country} continentColor={continents[country.continent].color} allowed={playerHasNeighborOf(list[localPlayerIndex], country.name)} />
           ))}
         </ul>
       </div>
