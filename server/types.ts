@@ -26,62 +26,102 @@ export enum EnumEffectTargetCards {
   Countries = 'countries'
 }
 
-export type ID = string;
-
-export interface Game {
-  id: ID;
-  state: EnumGameStates;
-  requiredPlayers: number;
-  owner: ID;
-  turn: number;
-  round: number;
-  players: Player[];
+export type ActionType = {
+  type: string;
+  playerIndex: number;
+  data?: any;
+  status?: 'pending' | 'success' | 'failed';
 }
 
-export interface GameConfig {
-  id: ID;
-  gameID: ID;
+export type BufferTypes = {
+  type: string;
+  value: number
+}
+
+export type DebufferTypes = {
+  type: string;
+  value: number
+}
+
+export type PlayerStatus = {
+  name: string;
+  dicecards: number | number[][];
+  effectcards: number | EffectCardType[];
+  countries: CountryType[];
+  buff: BufferTypes[];
+  debuff: DebufferTypes[];
+}
+
+export interface GameType {
+  state: EnumGameStates;
+  owner: string;
+  turn: number;
+  round: number;
+  players: PlayerType[];
+  gameConfig: GameConfigType[],
+  countries: CountryType[];
+  continents: ContinentType[];
+  
+  actions: ActionType[];
+  getDiceCard: () => number[][];
+  setDefense: (playerIndex: number, diceCard: number[]) => number[]; // card
+  attackConclude: () => void;
+  getCountryOwner: (country: string) => string;
+  setAttack: (playerIndex: number, defensePlayerIndex: number, attackingCountry: string, defensiveCountry: string, diceCard: number[]) => void; // events
+  playEffectCard: (playerIndex: number, cardName: string) => void; // events
+  isPlayerTurn: (playerIndex: number) => boolean;
+  advanceTurn: () => number; // turn
+}
+
+export interface GameConfigType {
   type: string;
   value: string | number | boolean;
 }
 
-export interface Objective {
-  id: ID;
+export interface ObjectiveType {
   description: string;
   players: number;
-  playerId: ID;
-  gameId: ID;
+  objetiveConditions: ObjectiveConditionType[]
 }
 
-export interface ObjectiveCondition {
-  id: ID;
-  objectiveId: ID;
-  conditionId: ID;
+export interface ObjectiveConditionType {
   type: EnumObjectiveType;
   amount: number;
   target: string;
 }
 
-export interface Player {
-  id: ID;
+export interface PlayerType {
   name: string;
+  socketId: string;
   dicecards: number[][];
-  effectcards: EffectCard[];
-  countries: Country[];
+  effectcards: EffectCardType[];
+  countries: CountryType[];
+  getDiceCard: () => number[];
+  getStatus: () => PlayerStatus[];
+  isPlayerTurn: () => boolean;
+  hasEffectCard: (card: string) => boolean;
+  hasDiceCard: (card: number[]) => boolean;
+  addDiceCards: (cards: number[][]) => void;
+  color: string;
 }
 
-export interface EffectCard {
+export interface EffectCardType {
+  name: string;
+  description: string;
   type: EnumEffectCards;
   target: EnumEffectTargetCards;
 }
 
-export interface Country {
+export interface CountryType {
   name: string;
   neighbors: string[];
   continent: string;
+  isNeighbor: (country: string) => boolean;
 }
 
-export interface Continent {
+export interface ContinentType {
   countries: string[];
   reward: number;
+  name: string;
+  color: string;
 }

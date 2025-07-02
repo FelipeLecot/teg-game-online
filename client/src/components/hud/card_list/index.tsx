@@ -1,4 +1,3 @@
-// CardList.tsx
 import React from 'react';
 import { useGameActions, useGameValues } from '../../../pages/Game';
 import DiceCard from '../../common/dice_card';
